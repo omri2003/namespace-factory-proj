@@ -10,7 +10,8 @@ spec:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: HEAD
         directories:
-          - path: envs/*/*/* template:
+          - path: envs/*/*/*
+  template:
     metadata:
       name: '{{index .path 1}}-{{index .path 2}}-{{index .path 3}}'
     spec:
