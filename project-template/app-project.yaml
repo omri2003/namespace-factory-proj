@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: 'project-{{index .path.segments 2}}' 
+  name: project-${TEAM_NAME}
   namespace: argocd
 spec:
-  description: "Governance for Team {{index .path.segments 2}}"
+  description: "Governance for Team ${TEAM_NAME}"
   sourceRepos:
   - '*'
   destinations:
-  - namespace: '*-{{index .path.segments 2}}-*' 
+  - namespace: '*-${TEAM_NAME}-*'
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: ''

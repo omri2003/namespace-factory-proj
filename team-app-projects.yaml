@@ -22,6 +22,10 @@ spec:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: HEAD
         path: project-template
+        plugin:
+          env:
+            - name: TEAM_NAME
+              value: '{{index .path.segments 2}}'
       destination:
         server: https://kubernetes.default.svc
         namespace: argocd
