@@ -8,7 +8,7 @@ spec:
   generators:
     - git:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
-        revision: HEAD
+        revision: main
         directories:
           - path: envs/*/*/*
   template:
@@ -18,7 +18,7 @@ spec:
       project: 'project-{{index .path.segments 2}}' 
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
-        targetRevision: HEAD
+        targetRevision: main
         path: '{{.path.path}}'
         plugin:
           env:
