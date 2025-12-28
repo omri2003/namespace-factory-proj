@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: team-appProjects
+  name: team-app-projects
   namespace: argocd
 spec:
   goTemplate: true
