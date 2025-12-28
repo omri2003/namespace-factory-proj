@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-management-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
+    targetRevision: HEAD
+    path: .
+    directory:
+      include: 'team-*.yaml'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
