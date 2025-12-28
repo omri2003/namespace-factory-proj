@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   - limitRange.yaml
   - networkpolicy.yaml
-  - basic-resource-quota
+  - basic-resource-quota.yaml
   - roleBinding.yaml
   - serviceAccount.yaml
