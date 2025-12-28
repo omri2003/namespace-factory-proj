@@ -15,7 +15,7 @@ spec:
     metadata:
       name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
     spec:
-      project: '{{index .path.segments 2}}' 
+      project: 'project-{{index .path.segments 2}}' 
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: HEAD
