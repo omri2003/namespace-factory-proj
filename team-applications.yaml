@@ -15,28 +15,33 @@ spec:
     metadata:
       name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
     spec:
-      project: 'project-{{index .path.segments 2}}' 
+      project: 'project-{{index .path.segments 2}}'
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: main
         path: '{{.path.path}}'
-        plugin:
-          env:
-            - name: ENVIRONMENT
-              value: '{{index .path.segments 1}}'
-            - name: TEAM_NAME
-              value: '{{index .path.segments 2}}'
-            - name: PROJECT_NAMESPACE
-              value: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
-              
+        kustomize:
+          patches:
+            - target:
+                kind: RoleBinding
+                name: team-rolebinding
+              patch: |-
+                - op: replace
+                  path: /subjects/0/name
+                  value: {{index .path.segments 2}}
+            - target:
+                kind: RoleBinding
+                name: team-rolebinding
+              patch: |-
+                - op: replace
+                  path: /subjects/1/namespace
+                  value: {{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
-        
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          - ServerSideApply=true
