@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-appProjects
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - git:
+        repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
+        revision: HEAD
+        directories:
+          - path: envs/*/*
+  template:
+    metadata:
+      name: 'project-{{index .path 2}}'
+    spec:
+      project: default 
+      source:
+        repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
+        targetRevision: HEAD
+        path: project-template
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
