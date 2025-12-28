@@ -13,9 +13,11 @@ spec:
           - path: envs/development/*
   template:
     metadata:
-      name: 'project-{{index .path.segments 2}}'
+      # CHANGED: Add '-deployer' so this Application name 
+      # doesn't collide with the AppProject name it's creating
+      name: 'project-{{index .path.segments 2}}-deployer' 
     spec:
-      project: default 
+      project: default
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: HEAD
@@ -23,7 +25,3 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: argocd
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
