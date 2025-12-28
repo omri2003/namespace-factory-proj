@@ -15,7 +15,7 @@ spec:
     metadata:
       # CHANGED: Add '-deployer' so this Application name 
       # doesn't collide with the AppProject name it's creating
-      name: 'project-{{index .path.segments 2}}-deployer' 
+      name: 'project-{{index .path.segments 2}}'
     spec:
       project: default
       source:
