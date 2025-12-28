@@ -13,9 +13,9 @@ spec:
           - path: envs/*/*/*
   template:
     metadata:
-      name: '{{index .path 1}}-{{index .path 2}}-{{index .path 3}}'
+      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
     spec:
-      project: '{{index .path 2}}' 
+      project: '{{index .path.segments 2}}' 
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: HEAD
@@ -23,15 +23,15 @@ spec:
         plugin:
           env:
             - name: ENVIRONMENT
-              value: '{{index .path 1}}'
+              value: '{{index .path.segments 1}}'
             - name: TEAM_NAME
-              value: '{{index .path 2}}'
+              value: '{{index .path.segments 2}}'
             - name: PROJECT_NAMESPACE
-              value: '{{index .path 1}}-{{index .path 2}}-{{index .path 3}}'
+              value: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
               
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path 1}}-{{index .path 2}}-{{index .path 3}}'
+        namespace: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
         
       syncPolicy:
         automated:

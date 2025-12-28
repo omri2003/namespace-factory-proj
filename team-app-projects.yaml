@@ -13,7 +13,7 @@ spec:
           - path: envs/*/*
   template:
     metadata:
-      name: 'project-{{index .path 2}}'
+      name: 'project-{{index .path.segments 2}}'
     spec:
       project: default 
       source:
