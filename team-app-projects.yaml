@@ -13,9 +13,9 @@ spec:
           - path: envs/development/*
   template:
     metadata:
-      # CHANGED: Add '-deployer' so this Application name 
-      # doesn't collide with the AppProject name it's creating
       name: 'project-{{index .path.segments 2}}-deployer'
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
     spec:
       project: default
       source:
@@ -25,3 +25,9 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
