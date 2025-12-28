@@ -23,6 +23,7 @@ spec:
         targetRevision: HEAD
         path: project-template
         plugin:
+          name: argocd-vault-plugin
           env:
             - name: TEAM_NAME
               value: '{{index .path.segments 2}}'

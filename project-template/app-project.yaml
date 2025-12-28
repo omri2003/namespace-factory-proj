@@ -5,8 +5,7 @@ metadata:
   namespace: argocd
 spec:
   description: "Governance for Team ${TEAM_NAME}"
-  sourceRepos:
-  - '*'
+  sourceRepos: ["*"]
   destinations:
   - namespace: '*-${TEAM_NAME}-*'
     server: https://kubernetes.default.svc
