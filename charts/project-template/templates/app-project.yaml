@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: project-{{ .Values.team }}
+  name: project-{{ .Values.team }}-{{ .Values.env }}
   namespace: argocd
 spec:
   description: "Governance for Team {{ .Values.teamName }}"

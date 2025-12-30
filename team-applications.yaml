@@ -9,36 +9,35 @@ spec:
     - git:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: main
-        directories:
-          - path: envs/*/*/*
+        files:
+          - path: "envs/*/*/*.yaml" 
   template:
     metadata:
-      name: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
+      # Naming convention: [team]-[project]-[env]
+      name: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: "-10"
     spec:
-      project: 'project-{{index .path.segments 2}}'
+      # Naming convetion: project-[team]-[env]
+      project: 'project-{{index .path.segments 2}}-{{index .path.segments 1}}'
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: main
-        path: '{{.path.path}}'
-        kustomize:
-          patches:
-            - target:
-                kind: RoleBinding
-                name: team-rolebinding
-              patch: |-
-                - op: replace
-                  path: /subjects/0/name
-                  value: {{index .path.segments 2}}
-            - target:
-                kind: RoleBinding
-                name: team-rolebinding
-              patch: |-
-                - op: replace
-                  path: /subjects/1/namespace
-                  value: {{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}
+        path: charts/tenant-namespace
+        helm:
+          valueFiles:
+            - '{{.path.path}}'
+          parameters:
+            - name: "env"
+              value: '{{index .path.segments 1}}'
+            - name: "team"
+              value: '{{index .path.segments 2}}'
+            - name: "project"
+              value: '{{index .path.segments 3 | trimSuffix ".yaml"}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path.segments 1}}-{{index .path.segments 2}}-{{index .path.segments 3}}'
+        # Namespace: alpha-myproj-dev
+        namespace: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
       syncPolicy:
         automated:
           prune: true
