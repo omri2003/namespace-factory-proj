@@ -10,8 +10,10 @@ spec:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: main
         files:
-          - path: "envs/*/*/*.yaml" 
+          - path: "envs/*/*/*.yaml"
   template:
+    # This check ensures we only process 'myproj.yaml' and skip the 'alpha' or 'dev' folders
+    {{- if (eq (len .path.segments) 4) }}
     metadata:
       # Naming convention: [team]-[project]-[env]
       name: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
@@ -44,3 +46,4 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+    {{- end }}

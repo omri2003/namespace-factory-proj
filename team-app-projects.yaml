@@ -16,7 +16,7 @@ spec:
       # Naming convention: [team]-[env]-project-deployer
       name: '{{index .path.segments 2}}-{{index .path.segments 1}}-project-deployer'
       annotations:
-        argocd.argoproj.io/sync-wave: "-10"
+        argocd.argoproj.io/sync-wave: "-20"
     spec:
       project: default
       source:
