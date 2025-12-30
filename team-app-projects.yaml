@@ -9,12 +9,11 @@ spec:
     - git:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: main
-        # CHANGE: Look for files instead of directories
         files:
           - path: "envs/*/*/*.yaml" 
   template:
     metadata:
-      # Naming: <team>-<project>-<env>
+      # Naming convention: <team>-<project>-<env>
       name: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
