@@ -16,7 +16,7 @@ spec:
       # Naming: alpha-myproj-dev
       # We use 'index' safely here because the generator path filter (envs/*/*/*.yaml) 
       # should only return files at that depth.
-      name: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
+      name: '{{index .path.segments 2}}-{{.path.filename}}-{{index .path.segments 1}}'
       annotations:
         argocd.argoproj.io/sync-wave: "-10"
     spec:
@@ -35,10 +35,10 @@ spec:
             - name: "team"
               value: '{{index .path.segments 2}}'
             - name: "project"
-              value: '{{index .path.segments 3 | trimSuffix ".yaml"}}'
+              value: '{{.path.filename}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
+        namespace: '{{index .path.segments 2}}-{{.path.filename}}-{{index .path.segments 1}}'
       syncPolicy:
         automated:
           prune: true
