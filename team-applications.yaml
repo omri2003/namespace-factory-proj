@@ -14,9 +14,7 @@ spec:
           - path: "envs/*/*/*.yaml"
   template:
     metadata:
-      # Naming: alpha-myproj-dev
-      # We use 'index' safely here because the generator path filter (envs/*/*/*.yaml) 
-      # should only return files at that depth.
+      # Naming convention: [team]-[project]-[env]
       name: '{{index .path.segments 2}}-{{.path.filename | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
       annotations:
         argocd.argoproj.io/sync-wave: "-10"

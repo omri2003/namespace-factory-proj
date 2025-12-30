@@ -4,14 +4,12 @@ metadata:
   name: project-{{ .Values.team }}-{{ .Values.env }}
   namespace: argocd
 spec:
-  description: "Governance for Team {{ .Values.teamName }}"
+  description: "Governance for Team {{ .Values.team }} in {{ .Values.env }}"
   sourceRepos: ["*"]
   destinations:
   - namespace: '{{ .Values.team }}-*-{{ .Values.env }}'
     server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+  clusterResourceWhitelist: [] 
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
