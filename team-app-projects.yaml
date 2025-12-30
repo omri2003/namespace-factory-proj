@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: team-applications
+  name: team-app-projects
   namespace: argocd
 spec:
   goTemplate: true
@@ -9,38 +9,30 @@ spec:
     - git:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: main
-        files:
-          - path: "envs/*/*/*.yaml" 
+        directories:
+          - path: envs/*/*
   template:
     metadata:
-      # Naming convention: <team>-<project>-<env>
-      name: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
+      # Naming convention: [team]-[env]-project-deployer
+      name: '{{index .path.segments 2}}-{{index .path.segments 1}}-project-deployer'
       annotations:
-        argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-wave: "-10"
     spec:
-      # Links to the AppProject: project-<team>
-      project: 'project-{{index .path.segments 2}}'
+      project: default
       source:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         targetRevision: main
-        path: charts/tenant-namespace
+        path: charts/project-template
         helm:
-          valueFiles:
-            - '{{.path.path}}'
           parameters:
             - name: "env"
               value: '{{index .path.segments 1}}'
             - name: "team"
               value: '{{index .path.segments 2}}'
-            - name: "project"
-              value: '{{index .path.segments 3 | trimSuffix ".yaml"}}'
       destination:
         server: https://kubernetes.default.svc
-        # Target Namespace: <team>-<project>-<env>
-        namespace: '{{index .path.segments 2}}-{{index .path.segments 3 | trimSuffix ".yaml"}}-{{index .path.segments 1}}'
+        namespace: argocd
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
