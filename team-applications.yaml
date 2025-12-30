@@ -28,7 +28,7 @@ spec:
         path: charts/tenant-namespace
         helm:
           valueFiles:
-            - '../../{{.path.path}}'
+            - '/{{.path.path}}'
           parameters:
             - name: "env"
               value: '{{index .path.segments 1}}'
