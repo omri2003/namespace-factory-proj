@@ -1,0 +1,13 @@
+quota:
+  cpuRequests: '4'
+  cpuLimits: '8'
+  memoryRequests: 8Gi
+  memoryLimits: 16Gi
+limits:
+  defaultCpu: 500m
+  defaultMemory: 512Mi
+  defaultRequestCpu: 200m
+  defaultRequestMemory: 256Mi
+rbac:
+  adminGroup: team-a-admins
+  viewGroup: team-a-viewers
