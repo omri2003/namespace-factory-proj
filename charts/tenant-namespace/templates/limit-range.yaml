@@ -3,6 +3,11 @@ kind: LimitRange
 metadata:
   name: {{ .Values.project }}-limits
   namespace: {{ .Values.team }}-{{ .Values.project }}-{{ .Values.env }}
+  labels:
+    team: {{ .Values.team | quote }}
+    project: {{ .Values.project | quote }}
+    env: {{ .Values.env | quote }}
+    managed-by: "namespace-factory"
   annotations:
     argocd.argoproj.io/sync-wave: "-3"
 spec:

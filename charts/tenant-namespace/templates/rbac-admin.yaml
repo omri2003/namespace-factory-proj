@@ -3,6 +3,11 @@ kind: RoleBinding
 metadata:
   name: {{ .Values.team }}-{{ .Values.project }}-admin-binding
   namespace: {{ .Values.team }}-{{ .Values.project }}-{{ .Values.env }}
+  labels:
+    team: {{ .Values.team | quote }}
+    project: {{ .Values.project | quote }}
+    env: {{ .Values.env | quote }}
+    managed-by: "namespace-factory"
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
 roleRef:
@@ -14,5 +19,5 @@ subjects:
     name: {{ .Values.rbac.groups.admin | quote }}
     apiGroup: rbac.authorization.k8s.io
   - kind: ServiceAccount
-    name: pipeline-deployer
+    name: {{ .Values.project }}-pipeline-deployer
     namespace: {{ .Values.team }}-{{ .Values.project }}-{{ .Values.env }}
