@@ -9,6 +9,7 @@ spec:
     - git:
         repoURL: 'https://github.com/omri2003/namespace-factory-proj.git'
         revision: main
+        requeueAfterSeconds: 60
         files:
           - path: "envs/*/*/*.yaml"
   template:
