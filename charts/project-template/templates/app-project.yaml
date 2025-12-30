@@ -9,7 +9,9 @@ spec:
   destinations:
   - namespace: '{{ .Values.team }}-*-{{ .Values.env }}'
     server: https://kubernetes.default.svc
-  clusterResourceWhitelist: [] 
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
