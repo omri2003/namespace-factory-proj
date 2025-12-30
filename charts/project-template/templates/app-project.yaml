@@ -7,7 +7,7 @@ spec:
   description: "Governance for Team {{ .Values.teamName }}"
   sourceRepos: ["*"]
   destinations:
-  - namespace: '*-{{ .Values.teamName }}-*'
+  - namespace: '{{ .Values.team }}-*-{{ .Values.env }}' # Matches alpha-myproj-dev
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: ''

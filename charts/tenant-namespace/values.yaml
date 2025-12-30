@@ -1,0 +1,20 @@
+rbac:
+  groups:
+    admin: team-a-admins
+    viewer: team-a-viewers
+
+quota:
+  cpu:
+    requests: '4'
+    limits: '8'
+  memory:
+    requests: "8Gi"
+    limits: "16Gi"
+    
+limits:
+  cpu:
+    default: "500m"
+    request: "200m"
+  memory:
+    default: "512Mi"
+    request: "256Mi"

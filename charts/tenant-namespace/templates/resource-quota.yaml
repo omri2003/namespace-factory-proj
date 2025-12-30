@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ .Values.project }}-quota
+  namespace: {{ .Values.team }}-{{ .Values.project }}-{{ .Values.env }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  hard:
+    requests.cpu: {{ .Values.quota.cpu.requests | quote }}
+    limits.cpu: {{ .Values.quota.cpu.limits | quote }}
+    requests.memory: {{ .Values.quota.memory.requests | quote }}
+    limits.memory: {{ .Values.quota.memory.limits | quote }}
+    pods: "20"

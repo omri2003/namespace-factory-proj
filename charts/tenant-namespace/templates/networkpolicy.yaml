@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-only-same-namespace
+  namespace: {{ .Values.team }}-{{ .Values.project }}-{{ .Values.env }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-4"
 spec:
   podSelector: {}
   policyTypes:
