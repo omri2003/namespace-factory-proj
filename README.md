@@ -290,7 +290,7 @@ spec:
 ## Charts
 ### project-template
 This template relates to our appProject and ensures that
-- we restrict our client by defining an empty clusterResourcesWhitelist thus restricting the team
+- we restrict our client by defining clusterResourcesWhitelist with only the Namespace in it thsu restricting the AppProject
 - we are defining a destination that only follows the "team-.\*-env" convention thus restricting the tenant to only those namespaces
 
 The only downside is sourceRepos which I have chosen to keep as a wildcard since those are configured based on the environment we are in and our regulations, which would be our organization's url.
@@ -306,7 +306,9 @@ spec:
   destinations:
   - namespace: '{{ .Values.team }}-*-{{ .Values.env }}'
     server: https://kubernetes.default.svc
-  clusterResourceWhitelist: []
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
