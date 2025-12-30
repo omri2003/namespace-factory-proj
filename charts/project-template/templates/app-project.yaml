@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: project-{{ .Values.teamName }}
+  name: project-{{ .Values.team }}
   namespace: argocd
 spec:
   description: "Governance for Team {{ .Values.teamName }}"
   sourceRepos: ["*"]
   destinations:
-  - namespace: '{{ .Values.team }}-*-{{ .Values.env }}' # Matches alpha-myproj-dev
+  - namespace: '{{ .Values.team }}-*-{{ .Values.env }}'
     server: https://kubernetes.default.svc
   clusterResourceWhitelist:
   - group: ''
