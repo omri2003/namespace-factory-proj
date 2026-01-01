@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: team-app-projects
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   goTemplate: true
   generators:
