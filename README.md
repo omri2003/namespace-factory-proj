@@ -1,14 +1,14 @@
 # namespace-factory-proj
 ## Starting out
 After using minikube and starting argo using the following commands I started planning out the deployment strategy and the workflow of creating a namespace
-```
+```bash
 k create namespace argocd
 k apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 ## Repository Directory Structure
 following the yaml that was provided I started planning the directory structure
 Tenant specification (example)
-```
+```yaml
 namespace: team-a-dev
 owner: team-a
 environment: dev
@@ -61,7 +61,7 @@ since we cant get our team's name, our env name and our project's name we can ge
 - environment
 
 now our value.yaml will be:
-```
+```yaml
 quota:
 	cpuRequests: '4'
 	cpuLimits: '8'
@@ -77,7 +77,7 @@ rbac:
 	viewGroup: team-a-viewers
 ```
 We can now reorganize the file, and after doing so we will be left with:
-```
+```yaml
 rbac:
   groups:
     admin: team-a-admins
@@ -105,7 +105,7 @@ Now that we finished planning the workflow and the file structure we can move on
 
 ## ApplicationSets and Helm Charts
 To create a new namespace following our standards from start to finish we will need a few things
-```
+```yaml
 - app-project (for argocd)
 - namespace.yaml
 - networkpolicy.yaml
@@ -162,7 +162,7 @@ team-applications.yaml      # The tenant's namespace related yamls applicationSe
 ### root application
 our root app will contain our repository and is pretty standard and will include only our team-\*.yaml files since these are the applicationSets we will use in this exercise
 its important to note that SyncPolicy that was added is there to ensure that we are always in our desired state according to our SSOT.
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -191,7 +191,7 @@ spec:
 This application is configured to use the naming convention [team]-[env]-project-deployer in order to create applications related to the appProjects
 Its purpose is to scan the folders under the envs and pass the "env" and "team" parameters in order to create an application that will use our appProject chart and create an appProject for our tenants.
 We can also see that our sync-wave is set to "-20" which will ensure our appProject will be created before any of the resources from the  tenant related applicationSet (which we will soon see is set to "-10")
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -236,7 +236,7 @@ spec:
 ### team-applications
 This applicationSet's purpose is to discover each of our tenant's projects by scanning the envs directory, then generate their namespaces following the naming "team-project-env" and apply all of the resources under our tenant-namespace chart using the "env", "team", and "project" variables.
 We can also see that the sync-wave here is set to -10 ensuring our appProject will be created before the applicationSet
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -294,7 +294,7 @@ This template relates to our appProject and ensures that
 - we are defining a destination that only follows the "team-.\*-env" convention thus restricting the tenant to only those namespaces
 
 The only downside is sourceRepos which I have chosen to keep as a wildcard since those are configured based on the environment we are in and our regulations, which would be our organization's url.
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -323,7 +323,7 @@ is this chart we will create each of our cluster yamls with the following sync o
 this sync order was chosen based on the idea of first creating the environment, then applying its network and resource limits, creating the service account, and only after all of the limits and resources have been created allow the tenant to start using the project.
 
 Its important to note that each file here will have the following labels:
-```
+```yaml
   labels:
     team: {{ .Values.team | quote }}
     project: {{ .Values.project | quote }}
@@ -334,7 +334,7 @@ these are added in order to make both monitoring and filtering easier for us and
 #### namespace.yaml
 Creates our namespace even though the CreateNamespace=true is enabled in our applicationSet, since we want to add our own metadata to the file.
 also its important to have all files in our SSOT to ensure our desired state is always available.
-```
+```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -349,7 +349,7 @@ metadata:
 ```
 #### networkpolicy.yaml
 Here we define a network policy that will only allow pods in the same namespace to "talk" to each other to make sure no pods from namespace-a are "talking" to namespace-b without us knowing.
-```
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -372,7 +372,7 @@ spec:
 ```
 #### resource-quota.yaml 
 This Resource quota allows us to limit the namespace thus preventing noisy neighbors from affecting other tenants in the cluster.
-```
+```yaml
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -395,7 +395,7 @@ spec:
 #### limit-range.yaml
 This limit range will enforce limitations on the containers created thus preventing any pod from consuming too much of our resources, ensuring it is OOM killed in case it crosses the limitations set.
 We also provide defaults that our developers can rely on when deploying pods without a resources section.
-```
+```yaml
 apiVersion: v1
 kind: LimitRange
 metadata:
@@ -420,7 +420,7 @@ spec:
 ```
 #### serviceAccount.yaml
 We create the following service account for cicd purposes, ensuring one will be created for each project the team owns.
-```
+```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -437,7 +437,7 @@ metadata:
 #### rbac-admin.yaml
 This yaml give our tenant the edit  roleRef, which prevent the client from modifying our Quotas and RBAC making it a perfect fit for our tenants which will need permissions in their project and for us who want to retain our control over them.
 Since the group is part of our LDAP we can easily use it to allow both our service account and our tenant to access the project.
-```
+```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -464,7 +464,7 @@ subjects:
 ```
 #### rbac-viewer.yaml
 This role will be created only if the viewer variable is defined and will allow this group to view the project's resources.
-```
+```yaml
 {{- if .Values.rbac.groups.viewer }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
